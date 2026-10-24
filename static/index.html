@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10b981">
+<title>寵物健康紀錄</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <div class="title">🐾 寵物健康</div>
+  <button id="btnAddPet" class="ghost">＋寵物</button>
+</header>
+
+<nav id="petTabs" class="pettabs"></nav>
+
+<main id="main">
+  <div id="empty" class="empty" hidden>還沒有寵物，點上面「＋寵物」建立第一隻。</div>
+  <section id="dashboard" hidden>
+    <div class="cards" id="statCards"></div>
+    <div class="upcoming" id="upcoming" hidden>
+      <h3>⏰ 即將到期 / 未結</h3>
+      <div id="upcomingList"></div>
+    </div>
+    <div class="chartbox">
+      <h3>📈 體重趨勢</h3>
+      <canvas id="weightChart" width="900" height="260"></canvas>
+    </div>
+    <div class="quickbtns">
+      <button class="big daily" id="btnAddDaily">＋ 紀錄日常</button>
+      <button class="big medical" id="btnAddMedical">＋ 醫療紀錄</button>
+    </div>
+    <h3 class="feedtitle">🗂 紀錄</h3>
+    <div id="feed"></div>
+  </section>
+</main>
+
+<div id="sheetBack" class="sheetback" hidden></div>
+
+<!-- 日常紀錄 -->
+<div id="sheetDaily" class="sheet" hidden>
+  <h3>＋ 紀錄日常</h3>
+  <div class="kindgrid" id="kindGrid"></div>
+  <div class="row2">
+    <label>體重 <input id="dWeight" type="number" step="0.01" inputmode="decimal" placeholder="kg"></label>
+    <label>體溫 °C <input id="dTemp" type="number" step="0.1" inputmode="decimal" placeholder="選填"></label>
+  </div>
+  <label>飲食 <input id="dFood" placeholder="例：早餐一碗渴望鸡肉"></label>
+  <label>排便 <div class="poopgrid" id="poopGrid"></div></label>
+  <label>備註 <textarea id="dNote" rows="2" placeholder="症状、精神、活動力…"></textarea></label>
+  <label>拍照 📷 <input id="dPhotos" type="file" accept="image/*" multiple></label>
+  <div class="thumbs" id="dThumbs"></div>
+  <div class="sheetbtns">
+    <button class="cancel">取消</button>
+    <button class="save" id="dSave">存入</button>
+  </div>
+</div>
+
+<!-- 醫療紀錄 -->
+<div id="sheetMedical" class="sheet" hidden>
+  <h3>＋ 醫療紀錄</h3>
+  <div class="kindgrid" id="medTypeGrid"></div>
+  <label>標題 <input id="mTitle" placeholder="例：疫苗（狂犬病）"></label>
+  <div class="row2">
+    <label>日期 <input id="mDate" type="date"></label>
+    <label>下次日期 <input id="mNext" type="date"></label>
+  </div>
+  <label class="chk"><input id="mDone" type="checkbox"> 已完成／已結</label>
+  <label>備註 <textarea id="mNote" rows="2" placeholder="診所、藥品、劑量…"></textarea></label>
+  <label>拍照 📷 <input id="mPhotos" type="file" accept="image/*" multiple></label>
+  <div class="thumbs" id="mThumbs"></div>
+  <div class="sheetbtns">
+    <button class="cancel">取消</button>
+    <button class="save" id="mSave">存入</button>
+  </div>
+</div>
+
+<!-- 新增/編輯寵物 -->
+<div id="sheetPet" class="sheet" hidden>
+  <h3 id="petSheetTitle">＋ 新增寵物</h3>
+  <label>名字 <input id="pName" placeholder="例：点点"></label>
+  <div class="kindgrid" id="speciesGrid"></div>
+  <div class="row2">
+    <label>生日 <input id="pBirthday" type="date"></label>
+    <label>體重單位
+      <select id="pUnit"><option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option></select>
+    </label>
+  </div>
+  <label>備註 <textarea id="pNote" rows="2" placeholder="品種、晶片號…"></textarea></label>
+  <div class="sheetbtns">
+    <button class="del petdel" id="pDelete" hidden>刪除</button>
+    <span class="flex"></span>
+    <button class="cancel">取消</button>
+    <button class="save" id="pSave">存入</button>
+  </div>
+</div>
+
+<div id="lightbox" hidden><img id="lightboxImg" alt=""></div>
+<div id="toast" hidden></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
