@@ -8,14 +8,34 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
   font-family: -apple-system, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; }
 body { padding-bottom: 40px; max-width: 760px; margin: 0 auto; }
 
+.update-banner { position: sticky; top: 0; z-index: 30; display: flex; gap: 10px;
+  align-items: center; justify-content: space-between; background: var(--amber);
+  color: #3a2a04; padding: 10px 16px; font-weight: 700; }
+.update-btn { background: #3a2a04; color: var(--amber); border: 0; border-radius: 10px; }
+.prompt { border: 1px solid var(--line); background: var(--card); color: var(--text);
+  border-radius: 16px; max-width: 420px; }
+.prompt::backdrop { background: rgba(0,0,0,.6); }
+.prompt h2 { margin: 0 0 8px; font-size: 18px; }
+.prompt p { color: var(--dim); font-size: 14px; }
+.prompt-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+
 header { display: flex; align-items: center; justify-content: space-between;
   padding: 14px 16px 8px; }
 .title { font-size: 20px; font-weight: 700; }
+.ver { font-size: 11px; color: var(--dim); font-weight: 400; }
+.headtools { display: flex; gap: 8px; align-items: center; }
 button { font: inherit; color: var(--text); background: var(--card2);
-  border: 1px solid var(--line); border-radius: 12px; padding: 10px 16px;
-  cursor: pointer; }
+  border: 1px solid var(--line); border-radius: 12px; padding: 10px 16px; cursor: pointer; }
 button:active { transform: scale(0.97); }
-.ghost { background: transparent; }
+button:disabled { opacity: .5; }
+.ghost { background: transparent; padding: 8px 10px; }
+.pill { border-radius: 999px; font-size: 12px; padding: 7px 12px; }
+.pill.local { background: var(--card2); color: var(--dim); }
+.pill.syncing { background: var(--blue); color: #0c2440; }
+.pill.synced { background: var(--green); color: #06281c; }
+.pill.login, .pill.folder, .pill.error { background: var(--amber); color: #3a2a04; }
+.pill.reader, .pill.offline { background: var(--card2); color: var(--amber); }
+.pill.pending { background: var(--card2); color: var(--blue); }
 
 .pettabs { display: flex; gap: 8px; padding: 6px 16px 10px; overflow-x: auto; }
 .pettabs button { white-space: nowrap; border-radius: 999px; padding: 8px 16px; }
@@ -30,10 +50,11 @@ h3 { font-size: 15px; margin: 18px 0 8px; color: var(--dim); }
 .card .v { font-size: 20px; font-weight: 700; }
 .card .l { font-size: 12px; color: var(--dim); margin-top: 2px; }
 .card .up { color: var(--red); } .card .down { color: var(--blue); }
+.card img.petface { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; }
 
 .upcoming { background: var(--card); border-radius: 14px; padding: 4px 14px 10px; }
 .upitem { display: flex; align-items: center; gap: 8px; padding: 8px 0;
-  border-bottom: 1px solid var(--line); font-size: 14px; }
+  border-bottom: 1px solid var(--line); font-size: 14px; flex-wrap: wrap; }
 .upitem:last-child { border-bottom: 0; }
 .upitem .due { margin-left: auto; font-size: 12px; }
 .due.over { color: var(--red); } .due.soon { color: var(--amber); } .due.okk { color: var(--dim); }
@@ -62,6 +83,7 @@ h3 { font-size: 15px; margin: 18px 0 8px; color: var(--dim); }
 .tag { display: inline-block; background: var(--card2); border-radius: 8px;
   padding: 2px 8px; font-size: 12px; margin-right: 6px; }
 .donetag { color: var(--green); } .nexttag { color: var(--amber); }
+.missing { color: var(--dim); font-size: 12px; }
 
 /* sheets */
 .sheetback { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 40; }
@@ -70,7 +92,7 @@ h3 { font-size: 15px; margin: 18px 0 8px; color: var(--dim); }
   padding: 18px 18px calc(18px + env(safe-area-inset-bottom)); max-width: 760px; margin: 0 auto; }
 .sheet h3 { margin: 0 0 12px; color: var(--text); font-size: 18px; }
 .sheet label { display: block; font-size: 13px; color: var(--dim); margin: 10px 0; }
-.sheet input[type=number], .sheet input[type=text], .sheet input[type=date],
+.sheet input[type=number], .sheet input[type=text], .sheet input[type=date], .sheet input[type=email],
 .sheet textarea, .sheet select, #mTitle, #pName {
   display: block; width: 100%; margin-top: 4px; background: var(--bg); color: var(--text);
   border: 1px solid var(--line); border-radius: 10px; padding: 11px; font-size: 16px; }
@@ -86,6 +108,10 @@ h3 { font-size: 15px; margin: 18px 0 8px; color: var(--dim); }
 .poopgrid { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
 .poopgrid button { border-radius: 10px; padding: 8px 10px; font-size: 20px; line-height: 1; }
 .poopgrid button.on { background: var(--green); border-color: var(--green); }
+.photobar { margin: 10px 0; }
+.photopick { display: inline-block; background: var(--card2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 10px 14px; color: var(--text); font-size: 14px; }
+.photopick input { display: none; }
 .thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
 .thumbs .th { position: relative; }
 .thumbs img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; }
@@ -99,6 +125,17 @@ h3 { font-size: 15px; margin: 18px 0 8px; color: var(--dim); }
 .sheetbtns .save { flex: 2; background: var(--green); color: #06281c; font-weight: 700; border: 0; }
 .sheetbtns .cancel { flex: 1; }
 .sheetbtns .del { background: transparent; color: var(--red); border-color: var(--red); }
+
+/* settings panel */
+.syncbox { background: var(--card2); border-radius: 12px; padding: 12px; margin: 10px 0;
+  display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.syncbox .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.syncbox .muted { color: var(--dim); font-size: 13px; }
+.syncbox .member { display: flex; gap: 8px; align-items: center; }
+.syncbox .member .tag { margin: 0; }
+.syncbox button { padding: 9px 14px; }
+.syncbox .primary { background: var(--green); color: #06281c; border: 0; font-weight: 700; }
+.syncbox input { flex: 1; min-width: 160px; }
 
 #lightbox { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.9);
   display: flex; align-items: center; justify-content: center; }

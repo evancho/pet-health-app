@@ -1,3 +1,7 @@
 data/
+legacy-data/
 __pycache__/
-*.bak-*
+node_modules/
+dist/
+.env.local
+.vite/
