@@ -29,7 +29,7 @@ function esc(s) {
 }
 function toast(msg, color) {
   const t = $('#toast');
-  t.textContent = msg; t.style.background = color || 'var(--green)'; t.style.color = color ? '#fff' : '#06281c';
+  t.textContent = msg; t.style.background = color || 'var(--green)'; t.style.color = '#fff';
   t.hidden = false; clearTimeout(t._h); t._h = setTimeout(() => (t.hidden = true), 2200);
 }
 function fmtTime(ts) {
@@ -136,7 +136,7 @@ function drawChart() {
   const pts = weightSeries(logsFor(state.petId), state.petId);
   ctx.clearRect(0, 0, c.width, c.height);
   if (!pts.length) {
-    ctx.fillStyle = '#94a3b8'; ctx.font = '22px sans-serif';
+    ctx.fillStyle = '#a0703c'; ctx.font = '22px sans-serif';
     ctx.fillText('還沒有體重資料 — 記一筆有體重的紀錄就會畫曲線', 30, 130);
     return;
   }
@@ -150,7 +150,7 @@ function drawChart() {
   ymin -= span * 0.15; ymax += span * 0.15;
   const X = (t) => padL + ((t - xmin) / (xmax - xmin)) * (W - padL - padR);
   const Y = (v) => padT + (1 - (v - ymin) / (ymax - ymin)) * (H - padT - padB);
-  ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.fillStyle = '#94a3b8'; ctx.font = '18px sans-serif';
+  ctx.strokeStyle = '#e6cf9a'; ctx.lineWidth = 1; ctx.fillStyle = '#a0703c'; ctx.font = '18px sans-serif';
   for (let i = 0; i <= 3; i++) {
     const v = ymin + ((ymax - ymin) * i) / 3, y = Y(v);
     ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
@@ -158,10 +158,10 @@ function drawChart() {
   }
   ctx.beginPath();
   pts.forEach((p, i) => { const x = X(xs[i]), y = Y(ys[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
-  ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3; ctx.stroke();
-  ctx.fillStyle = '#10b981';
+  ctx.strokeStyle = '#e06666'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.fillStyle = '#e06666';
   pts.forEach((p, i) => { ctx.beginPath(); ctx.arc(X(xs[i]), Y(ys[i]), 5, 0, 7); ctx.fill(); });
-  ctx.fillStyle = '#94a3b8'; ctx.font = '16px sans-serif';
+  ctx.fillStyle = '#a0703c'; ctx.font = '16px sans-serif';
   ctx.fillText(String(pts[0].dt).slice(0, 10), padL, H - 12);
   const lastLabel = String(pts[pts.length - 1].dt).slice(0, 10);
   ctx.fillText(lastLabel, W - padR - ctx.measureText(lastLabel).width, H - 12);

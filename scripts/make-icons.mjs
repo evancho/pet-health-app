@@ -57,8 +57,8 @@ function inEllipse(x, y, cx, cy, rx, ry) {
 
 function render(size, { fullBleed }) {
   const px = Buffer.alloc(size * size * 3);
-  const bg = [16, 185, 129];      // #10b981
-  const fg = [6, 40, 28];         // dark green paw
+  const bg = [224, 102, 102];   // #e06666
+  const fg = [120, 63, 4];      // #783f04 paw
   const pad = fullBleed ? Math.round(size * 0.18) : Math.round(size * 0.10);
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
