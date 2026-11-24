@@ -126,6 +126,7 @@ h3 { font-size: 15px; margin: 18px 0 8px; color: var(--dim); }
 .sheetbtns .save { flex: 2; background: var(--accent); color: #fff; font-weight: 700; border: 0; }
 .sheetbtns .cancel { flex: 1; }
 .sheetbtns .del { background: transparent; color: var(--red); border-color: var(--red); }
+#confirm-ok { background: var(--red); color: #fff; border-color: var(--red); font-weight: 700; }
 
 /* settings panel */
 .syncbox { background: var(--card2); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 10px 0;

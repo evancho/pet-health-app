@@ -32,6 +32,19 @@ function toast(msg, color) {
   t.textContent = msg; t.style.background = color || 'var(--green)'; t.style.color = '#fff';
   t.hidden = false; clearTimeout(t._h); t._h = setTimeout(() => (t.hidden = true), 2200);
 }
+/* 原生 <dialog> 刪除確認（取代 confirm()：focus 管理、行動端體驗、可做殺手級警告） */
+function askConfirm(title, copy, okLabel = '刪除') {
+  const d = $('#confirmBox');
+  const { promise, resolve } = Promise.withResolvers();
+  $('#confirm-title').textContent = title;
+  $('#confirm-copy').textContent = copy;
+  $('#confirm-ok').textContent = okLabel;
+  const onclose = () => { d.removeEventListener('close', onclose); resolve(d.returnValue === 'ok'); };
+  d.addEventListener('close', onclose);
+  d.showModal();
+}
+$('#confirm-cancel').onclick = () => $('#confirmBox').close();
+$('#confirm-ok').onclick = () => $('#confirmBox').close('ok');
 function fmtTime(ts) {
   if (!ts) return '';
   const d = new Date(Number(ts));
@@ -56,7 +69,7 @@ function medicalFor(petId) { return state.records.filter((r) => r.type === 'medi
 
 function renderTabs() {
   const nav = $('#petTabs');
-  nav.innerHTML = '';
+  nav.replaceChildren();
   for (const p of pets()) {
     const b = document.createElement('button');
     b.textContent = `${speciesEmoji(p.species)} ${p.name}`;
@@ -209,7 +222,7 @@ async function renderFeed() {
   $('#feed').innerHTML = parts.join('') || '<div class="empty">目前沒有紀錄</div>';
 
   $$('#feed [data-delrec]').forEach((b) => (b.onclick = async () => {
-    if (!confirm('刪掉這筆紀錄？家人那邊也會跟著刪。')) return;
+    if (!(await askConfirm('刪掉這筆紀錄？', '家人那邊也會跟著刪。'))) return;
     await deleteRecord(b.dataset.delrec, { queue: true });
     toast('已刪除', 'var(--red)');
     await refresh(); queueSyncSoon();
@@ -249,7 +262,7 @@ $('#sheetBack').onclick = closeSheets;
 $$('.sheet .cancel').forEach((b) => (b.onclick = closeSheets));
 
 function chipGrid(container, list, cur, onPick) {
-  container.innerHTML = '';
+  container.replaceChildren();
   for (const it of list) {
     const b = document.createElement('button');
     b.textContent = it.label;
@@ -274,14 +287,26 @@ async function handlePicked(input, thumbsEl, store, { single = false } = {}) {
   input.value = '';
 }
 function renderThumbs(thumbsEl, store) {
-  thumbsEl.innerHTML = '';
-  store.forEach((item, i) => {
+  const nodes = store.map((item, i) => {
     const div = document.createElement('div');
     div.className = 'th';
-    div.innerHTML = `<img src="${item.url}" alt="">${item.status === 'processing' ? '<div class="st">處理中</div>' : item.status === 'fail' ? '<div class="st" style="color:#f87171">失敗</div>' : ''}<button class="x">×</button>`;
-    div.querySelector('.x').onclick = () => { store.splice(i, 1); renderThumbs(thumbsEl, store); };
-    thumbsEl.appendChild(div);
+    const img = document.createElement('img');
+    img.src = item.url; img.alt = '';
+    div.appendChild(img);
+    if (item.status === 'processing' || item.status === 'fail') {
+      const st = document.createElement('div');
+      st.className = 'st';
+      st.textContent = item.status === 'processing' ? '處理中' : '失敗';
+      if (item.status === 'fail') st.style.color = '#f87171';
+      div.appendChild(st);
+    }
+    const x = document.createElement('button');
+    x.className = 'x'; x.textContent = '×';
+    x.onclick = () => { store.splice(i, 1); renderThumbs(thumbsEl, store); };
+    div.appendChild(x);
+    return div;
   });
+  thumbsEl.replaceChildren(...nodes);
 }
 function stagedPhotoIds(store) {
   return store.filter((p) => p.status === 'ready').map((p) => p.photoId);
@@ -301,7 +326,7 @@ function mergedPhotoIds(store, keepIds = []) {
 function openDaily() {
   state.kind = 'daily'; state.poop = ''; state.dailyPhotos = [];
   $('#dWeight').value = ''; $('#dTemp').value = ''; $('#dFood').value = '';
-  $('#dNote').value = ''; $('#dThumbs').innerHTML = '';
+  $('#dNote').value = ''; $('#dThumbs').replaceChildren();
   chipGrid($('#kindGrid'), KINDS, state.kind, (k) => (state.kind = k));
   chipGrid($('#poopGrid'), POOPS.map((p) => ({ id: p.v, label: p.label })), state.poop, (p) => (state.poop = p));
   openSheet('#sheetDaily');
@@ -325,7 +350,7 @@ $('#dSave').onclick = async () => {
 function openMedical() {
   state.medType = 'vaccine'; state.medPhotos = [];
   $('#mTitle').value = ''; $('#mDate').value = todayStr(); $('#mNext').value = '';
-  $('#mDone').checked = false; $('#mNote').value = ''; $('#mThumbs').innerHTML = '';
+  $('#mDone').checked = false; $('#mNote').value = ''; $('#mThumbs').replaceChildren();
   chipGrid($('#medTypeGrid'), MEDTYPES, state.medType, (t) => (state.medType = t));
   openSheet('#sheetMedical');
   setTimeout(() => $('#mTitle').focus(), 100);
@@ -357,7 +382,7 @@ function openPetSheet(editId) {
   $('#pUnit').value = UNITS.includes(p?.unit) ? p.unit : 'kg';
   $('#pNote').value = p?.note || '';
   $('#pDelete').hidden = !p;
-  $('#pThumbs').innerHTML = '';
+  $('#pThumbs').replaceChildren();
   if (p?.photoId) {
     getPhotoBlob(p.photoId).then((blob) => {
       if (!blob) return;
@@ -374,7 +399,7 @@ $('#pPhoto').onchange = async (e) => {
   await handlePicked(e.target, $('#pThumbs'), state.petPhoto, { single: true });
 };
 $('#pDelete').onclick = async () => {
-  if (!confirm(`刪除 ${pet().name} 和他所有紀錄？照片也會一起刪，家人那邊會跟著刪，無法復原！`)) return;
+  if (!(await askConfirm(`刪除 ${pet().name} 和他所有紀錄？`, '照片也會一起刪，家人那邊會跟著刪，無法復原！'))) return;
   const doomed = [pet().id, ...logsFor(pet().id).map((r) => r.id), ...medicalFor(pet().id).map((r) => r.id)];
   for (const id of doomed) await deleteRecord(id, { queue: true });
   state.petId = 0;
