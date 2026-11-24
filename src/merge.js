@@ -67,7 +67,7 @@ export function collapseRemote(remoteRecords) {
   const records = [];
   const staleFileIds = [];
   for (const group of groups.values()) {
-    const ranked = [...group].sort((a, b) => {
+    const ranked = group.toSorted((a, b) => {
       const byStamp = versionStamp(b) - versionStamp(a);
       if (byStamp) return byStamp;
       return (Number(b?.deletedAt) || 0) - (Number(a?.deletedAt) || 0);

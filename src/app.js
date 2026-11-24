@@ -118,7 +118,7 @@ function renderUpcoming() {
   const box = $('#upcoming');
   if (!items.length) { box.hidden = true; return; }
   box.hidden = false;
-  const sorted = [...items].sort((a, b) => (a.nextDate || '9999') < (b.nextDate || '9999') ? -1 : 1);
+  const sorted = items.toSorted((a, b) => (a.nextDate || '9999') < (b.nextDate || '9999') ? -1 : 1);
   $('#upcomingList').innerHTML = sorted.map((m) => {
     let dueHtml = '<span class="due okk">未結</span>';
     const due = dueInfo(m.nextDate);
